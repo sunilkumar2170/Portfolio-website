@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunil Kumar - Web Developer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">SK</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#resume">Resume</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <div class="hamburger"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <img src="images/profile.jpg" alt="Sunil Kumar" class="profile-img">
+                <h1>Sunil Kumar</h1>
+                <h2>Web Developer</h2>
+                <p class="intro">BTech in Computer Science Engineering at IIT Bhilai. Skilled in Flutter development and web development along with problem-solving</p>
+                
+                <div class="quote-container">
+                    <p class="quote">GOOD VIBES ONLY</p>
+                    <p class="quote">DIFFICULT ROADS LEAD TO BEAUTIFUL DESTINATIONS</p>
+                    <p class="quote">YOUR TIME IS NOW</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resume Section -->
+        <section id="resume" class="resume-section">
+            <div class="resume-container">
+                <h2>Download My Resume</h2>
+                <div class="resume-card">
+                    <div class="resume-preview">
+                        <div class="resume-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="resume-info">
+                            <h3>sunil_kumar.pdf</h3>
+                            <p>250 KB • Updated March 2024</p>
+                        </div>
+                    </div>
+                    <a href="resume.pdf" download="sunil_kumar_resume.pdf" class="download-btn">
+                        <i class="fas fa-download"></i> Download Now
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="skills-section">
+            <h2>My Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><i class="fab fa-react"></i> Frontend</h3>
+                    <ul>
+                        <li>React</li>
+                        <li>JavaScript</li>
+                        <li>HTML5/CSS3</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <div class="skill-header">
+                        <div class="skill-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Programming</h3>
+                    </div>
+                    <ul class="skill-items">
+                        <li>C++</li>
+                        <li>Basic Python</li>
+                        <li>
+                            <span class="leetcode-stats">
+                                <span class="solved">150+</span>
+                                <span>LeetCode Solved</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3><i class="fas fa-database"></i> Database</h3>
+                    <ul>
+                        <li>MongoDB</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3><i class="fas fa-mobile-alt"></i> App Development</h3>
+                    <ul>
+                        <li>Flutter</li>
+                        <li>Dart</li>
+                        <li>Android Studio</li>
+                        <li>Firebase</li>
+                        <li>REST APIs</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3><i class="fas fa-laptop-code"></i> Others</h3>
+                    <ul>
+                        <li>Latex</li>
+                        <li>GitHub</li>
+                        <li>Linux</li>
+                        <li>Gnuplot</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <h2>Get In Touch</h2>
+            <div class="contact-container">
+                <a href="https://www.linkedin.com/in/sunil-kumar-0b5219324/" target="_blank" class="contact-button linkedin">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://github.com/sunilkumar2170" target="_blank" class="contact-button github">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="mailto:sunilkr@iitbhilai.ac.in" class="contact-button email">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Sunil Kumar. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
