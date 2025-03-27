@@ -1,7 +1,2 @@
 # My Professional Portfolio
-
-🚀 **Interactive portfolio** featuring my skills, projects, and resume with a **smart AI chatbot** assistant.  
-🤖 **Chatbot powered by OpenAI** that answers queries about my experience, education, and technical skills.  
-📱 **Fully responsive** design that works perfectly on mobile, tablet, and desktop devices.  
-🔧 **DevOps ready** - Deployed on AWS Amplify with CI/CD pipeline from GitHub.  
-🌐 **Live at**: [sunilkumar2170.github.io/Portfolio-website](https://sunilkumar2170.github.io/Portfolio-website) | **Repo**: [github.com/sunilkumar2170/Portfolio-website](https://github.com/sunilkumar2170/Portfolio-website)
+This is my Personal Portfolio Website, showcasing my skills and experience. It includes sections like Introduction, Skills (Data & DevOps), Resume, and Contact with interactive LinkedIn, GitHub, and email buttons. The site is fully responsive and visually appealing. Additionally, it integrates an AI Chatbot (using open-source LLM) to answer queries about my resume, skills, projects, and certifications. Hosted on Netlify & GitHub Pages for accessibility.
