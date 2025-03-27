@@ -1,91 +1,51 @@
+document.addEventListener('DOMContentLoaded', function() {
+  
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const navbar = document.querySelector('.navbar');
 
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = document.querySelector('.nav-links');
-
-menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('active');
-    navLinks.classList.toggle('active');
-});
-
-// Smooth scrolling for navigation links
-document.querySelectorAll('.navbar a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
+    menuToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
         
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        
-        window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-        });
-        
-        // Close mobile menu if open
-        if (window.innerWidth <= 768) {
-            menuToggle.classList.remove('active');
-            navLinks.classList.remove('active');
+        if (chatbotContainer.classList.contains('active')) {
+            chatbotContainer.classList.remove('active');
         }
     });
-});
 
-// Current year in footer
-document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil   Kumar. All rights reserved.`;
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        });
+    });
 
-// Resume Knowledge Base
-const resumeData = {
-    name: "Sunil Kumar",
-    skills: [
-        "Frontend: React, JavaScript, HTML5/CSS3",
-        "Programming: C++, basic Python",
-        "Database: MongoDB",
-        "App Dev: Flutter, Dart, Firebase",
-        "Tools: Git/GitHub, Linux, Latex, Gnuplot, Android Studio, Visual Studio",
-        "LeetCode: 150+ problems solved"
-    ],
-    experience: [
-        "Computer Science Engineering student at IIT Bhilai",
-        "Built various projects using modern web and app development technologies"
-    ],
-    projects: [
-        "Web development projects using React",
-        "Mobile apps developed with Flutter",
-        "Problem solving with C++ and Python"
-    ],
-    education: [
-        "BTech in Computer Science Engineering at IIT Bhilai"
-    ],
-    contact: [
-        "Email: sunilkr@iitbhilai.ac.in",
-        "LinkedIn: linkedin.com/in/sunil-kumar-0b5219324",
-        "GitHub: github.com/sunilkumar2170"
-    ],
-    general: [
-        "Passionate about building innovative digital solutions",
-        "Strong problem solving skills",
-        "Experience with both web and mobile development"
-    ]
-};
+    // Smooth Scrolling
+    document.querySelectorAll('.navbar a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (!targetElement) return;
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - navbar.offsetHeight,
+                behavior: 'smooth'
+            });
+        });
+    });
 
-// Enhanced System Prompt for OpenAI
-const SYSTEM_PROMPT = `
-You are Sunil Kumar, a Computer Science Engineering student at IIT Bhilai. 
-You're an expert in web and mobile development with skills in React, Flutter, and problem solving.
+    // Footer Year Update
+    document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil Kumar. All rights reserved.`;
 
-RESUME DATA:
-${JSON.stringify(resumeData, null, 2)}
-
-GUIDELINES:
-1. For resume-specific questions, provide detailed answers from the resume data
-2. For technical questions (coding, frameworks), provide helpful explanations
-3. For general/professional questions, give thoughtful responses
-4. For unknown topics, say "I'm not sure about that, but I can tell you about [related topic]"
-5. Keep responses professional yet conversational
-6. Format technical answers clearly with bullet points when helpful
-7. For contact requests, share only the info from the resume
-`;
-
-document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
+    // Chatbot Implementation
     const chatbotToggle = document.querySelector('.chatbot-toggle');
     const chatbotContainer = document.querySelector('.chatbot-container');
     const closeChatbot = document.querySelector('.close-chatbot');
@@ -93,145 +53,158 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('.chatbot-query');
     const chatMessages = document.querySelector('.chatbot-messages');
     const llmToggle = document.querySelector('.llm-toggle');
-    
-    // State
-    let useLLM = true; // Default to LLM mode
+
+    const resumeData = {
+        name: "Sunil Kumar",
+        skills: [
+            "Frontend: React, JavaScript, HTML5/CSS3",
+            "Programming: C++, basic Python",
+            "Database: MongoDB",
+            "App Dev: Flutter, Dart, Firebase",
+            "Tools: Git/GitHub, Linux, Latex, Gnuplot, Android Studio, Visual Studio",
+            "LeetCode: 150+ problems solved"
+        ],
+        experience: [
+            "Computer Science Engineering student at IIT Bhilai",
+            "Built various projects using modern web and app development technologies"
+        ],
+        projects: [
+            "Web development projects using React",
+            "Mobile apps developed with Flutter",
+            "Problem solving with C++ and Python"
+        ],
+        education: [
+            "BTech in Computer Science Engineering at IIT Bhilai"
+        ],
+        contact: [
+            "Email: sunilkr@iitbhilai.ac.in",
+            "LinkedIn: linkedin.com/in/sunil-kumar-0b5219324",
+            "GitHub: github.com/sunilkumar2170"
+        ],
+        general: [
+            "Passionate about building innovative digital solutions",
+            "Strong problem solving skills",
+            "Experience with both web and mobile development"
+        ]
+    };
+
+    const SYSTEM_PROMPT = `You are Sunil Kumar, a Computer Science student at IIT Bhilai specializing in web and mobile development.
+    Strictly follow these rules:
+    1. For resume questions, answer ONLY using the provided data
+    2. For technical questions, provide clear explanations
+    3. Be professional but friendly
+    4. Format responses neatly with bullet points when helpful
+    5. If unsure, say "I don't have that information but I can tell you about [related topic]"
+
+    RESUME DATA:
+    ${JSON.stringify(resumeData, null, 2)}`;
+
+    let useLLM = true;
     llmToggle.checked = useLLM;
     let conversationHistory = [
-        {
-            role: "system",
-            content: SYSTEM_PROMPT
-        },
-        {
-            role: "assistant",
-            content: "Hi! I'm Sunil's AI assistant. How can I help you today?"
-        }
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "assistant", content: "Hi! I'm Sunil's AI assistant. Ask me about my skills, projects, or experience!" }
     ];
-    
-    // Initialize chatbot
+
     function initChatbot() {
-        addMessage("Hi! I'm Sunil's AI assistant. How can I help you today?", 'bot');
+        addMessage("Hi! I'm Sunil's AI assistant. Ask me about my skills, projects, or experience!", 'bot');
     }
-    
-    // Toggle chatbot visibility
-    chatbotToggle.addEventListener('click', () => {
+
+    chatbotToggle.addEventListener('click', function() {
         chatbotContainer.classList.toggle('active');
+        if (navLinks.classList.contains('active')) {
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
     });
-    
-    closeChatbot.addEventListener('click', () => {
+
+    closeChatbot.addEventListener('click', function() {
         chatbotContainer.classList.remove('active');
     });
-    
-    // Toggle LLM mode
-    llmToggle.addEventListener('change', (e) => {
-        useLLM = e.target.checked;
-        addMessage(`Switched to ${useLLM ? 'Smart Mode (AI-powered)' : 'Basic Mode (rule-based)'}`, 'bot');
+
+    llmToggle.addEventListener('change', function() {
+        useLLM = this.checked;
+        addMessage(`Switched to ${useLLM ? 'AI Mode (powered by OpenAI)' : 'Basic Mode'}`, 'bot');
     });
-    
-    // Send message function
+
     async function sendMessage() {
         const query = chatInput.value.trim();
-        if (query) {
-            // Add user message to UI and history
-            addMessage(query, 'user');
-            if(useLLM) {
-                conversationHistory.push({
-                    role: "user",
-                    content: query
-                });
-            }
-            chatInput.value = '';
-            
-            // Show typing indicator
-            showTypingIndicator();
-            
-            try {
-                let response;
-                if (useLLM) {
-                    response = await generateAIResponse(query);
-                } else {
-                    // Simulate delay for rule-based response
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    response = generateRuleBasedResponse(query);
-                }
-                addMessage(response, 'bot');
-                if(useLLM) {
-                    conversationHistory.push({
-                        role: "assistant",
-                        content: response
-                    });
-                }
-            } catch (error) {
-                console.error("Error generating response:", error);
-                addMessage("Sorry, I'm having trouble connecting to the AI service. Please try again later.", 'bot');
-            } finally {
-                removeTypingIndicator();
-            }
+        if (!query) return;
+
+        addMessage(query, 'user');
+        if (useLLM) {
+            conversationHistory.push({ role: "user", content: query });
         }
-    }
-    
-    // Generate AI response using OpenAI
-    async function generateAIResponse(query) {
-        // Replace with your actual OpenAI API key
-        const API_KEY = "sk-your-openai-api-key-here"; 
-        const API_URL = "https://api.openai.com/v1/chat/completions";
+        chatInput.value = '';
+        
+        showTypingIndicator();
         
         try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: conversationHistory,
-                    temperature: 0.7,
-                    max_tokens: 500
-                })
-            });
-
-            const data = await response.json();
-            if(data.choices && data.choices[0]) {
-                return data.choices[0].message.content;
-            } else {
-                console.error("Unexpected API response:", data);
-                return generateRuleBasedResponse(query);
+            const response = useLLM 
+                ? await generateAIResponse(query) 
+                : generateRuleBasedResponse(query);
+            
+            addMessage(response, 'bot');
+            if (useLLM) {
+                conversationHistory.push({ role: "assistant", content: response });
             }
         } catch (error) {
-            console.error("API Error:", error);
-            throw error;
+            console.error("Error:", error);
+            addMessage("Sorry, I'm having trouble responding. Please try again.", 'bot');
+        } finally {
+            removeTypingIndicator();
         }
     }
-    
-    // Rule-based response generator
+
+    async function generateAIResponse(query) {
+        const API_KEY = "sk-your-openai-api-key-here";
+        const API_URL = "https://api.openai.com/v1/chat/completions";
+        
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: conversationHistory,
+                temperature: 0.7,
+                max_tokens: 300
+            })
+        });
+
+        const data = await response.json();
+        return data.choices?.[0]?.message?.content || generateRuleBasedResponse(query);
+    }
+
     function generateRuleBasedResponse(query) {
         query = query.toLowerCase();
         
-        if (query.includes('skill') || query.includes('technology') || query.includes('what can you do')) {
-            return "My technical skills include:\n- " + resumeData.skills.join("\n- ");
+        if (query.includes('skill') || query.includes('technology')) {
+            return "My technical skills include:\n" + resumeData.skills.map(s => `• ${s}`).join('\n');
         } 
         else if (query.includes('experience') || query.includes('work')) {
-            return "My experience includes:\n- " + resumeData.experience.join("\n- ");
+            return "My experience:\n" + resumeData.experience.map(e => `• ${e}`).join('\n');
         }
-        else if (query.includes('project') || query.includes('build')) {
-            return "I've worked on projects involving:\n- " + resumeData.projects.join("\n- ");
+        else if (query.includes('project')) {
+            return "Projects I've worked on:\n" + resumeData.projects.map(p => `• ${p}`).join('\n');
         }
-        else if (query.includes('education') || query.includes('study') || query.includes('degree')) {
-            return "My educational background:\n- " + resumeData.education.join("\n- ");
+        else if (query.includes('education') || query.includes('study')) {
+            return "Education:\n• " + resumeData.education.join('\n• ');
         }
-        else if (query.includes('hello') || query.includes('hi') || query.includes('hey')) {
-            return "Hello! I'm Sunil's assistant. Ask me about my skills, experience, or projects!";
+        else if (query.includes('contact') || query.includes('email') || query.includes('reach')) {
+            return "Contact me at:\n• " + resumeData.contact.join('\n• ');
         }
-        else if (query.includes('contact') || query.includes('reach') || query.includes('email')) {
-            return "You can contact me through:\n- " + resumeData.contact.join("\n- ");
+        else if (query.includes('hello') || query.includes('hi')) {
+            return "Hello! Ask me about my skills, projects, or experience.";
         }
         else {
-            return "I can tell you about my:\n- Skills and technologies\n- Work experience\n- Projects\n- Education\n\nTry asking about any of these!";
+            return "I can discuss:\n• My skills\n• Projects\n• Experience\n• Education\nTry asking about these!";
         }
     }
-    
-    // Add message to chat UI
+
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
@@ -239,33 +212,25 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-    
-    // Show typing indicator
+
     function showTypingIndicator() {
         const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing-indicator';
         typingDiv.classList.add('typing-indicator');
         typingDiv.innerHTML = '<span></span><span></span><span></span>';
-        typingDiv.id = 'typing-indicator';
         chatMessages.appendChild(typingDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-    
-    // Remove typing indicator
+
     function removeTypingIndicator() {
-        const typingIndicator = document.getElementById('typing-indicator');
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) indicator.remove();
     }
-    
-    // Event listeners for sending messages
+
     sendButton.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
+        if (e.key === 'Enter') sendMessage();
     });
-    
-    // Initialize
+
     initChatbot();
 });

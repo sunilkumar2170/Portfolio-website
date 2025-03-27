@@ -708,7 +708,6 @@ footer::before {
     50% { transform: translateY(-5px); }
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
     .chatbot-container {
         width: 90%;
