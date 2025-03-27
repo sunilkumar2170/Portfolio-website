@@ -29,4 +29,4 @@ document.querySelectorAll('.navbar a').forEach(anchor => {
 });
 
 // Current year in footer
-document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Anant Yadav. All rights reserved.`;
+document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil   Kumar. All rights reserved.`;
