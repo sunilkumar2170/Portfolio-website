@@ -1,4 +1,37 @@
 
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('active');
+    navLinks.classList.toggle('active');
+});
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('.navbar a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+        });
+        
+        // Close mobile menu if open
+        if (window.innerWidth <= 768) {
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+        }
+    });
+});
+
+// Current year in footer
+document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil   Kumar. All rights reserved.`;
+
+// Resume Knowledge Base
 const resumeData = {
     name: "Sunil Kumar",
     skills: [
@@ -25,7 +58,6 @@ const resumeData = {
         "Email: sunilkr@iitbhilai.ac.in",
         "LinkedIn: linkedin.com/in/sunil-kumar-0b5219324",
         "GitHub: github.com/sunilkumar2170"
-        
     ],
     general: [
         "Passionate about building innovative digital solutions",
@@ -34,6 +66,7 @@ const resumeData = {
     ]
 };
 
+// Enhanced System Prompt for OpenAI
 const SYSTEM_PROMPT = `
 You are Sunil Kumar, a Computer Science Engineering student at IIT Bhilai. 
 You're an expert in web and mobile development with skills in React, Flutter, and problem solving.
@@ -52,7 +85,7 @@ GUIDELINES:
 `;
 
 document.addEventListener('DOMContentLoaded', function() {
-   
+    // DOM Elements
     const chatbotToggle = document.querySelector('.chatbot-toggle');
     const chatbotContainer = document.querySelector('.chatbot-container');
     const closeChatbot = document.querySelector('.close-chatbot');
@@ -61,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.querySelector('.chatbot-messages');
     const llmToggle = document.querySelector('.llm-toggle');
     
- 
-    let useLLM = true; 
+    // State
+    let useLLM = true; // Default to LLM mode
     llmToggle.checked = useLLM;
     let conversationHistory = [
         {
@@ -75,12 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
     
- 
+    // Initialize chatbot
     function initChatbot() {
         addMessage("Hi! I'm Sunil's AI assistant. How can I help you today?", 'bot');
     }
     
- 
+    // Toggle chatbot visibility
     chatbotToggle.addEventListener('click', () => {
         chatbotContainer.classList.toggle('active');
     });
@@ -89,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatbotContainer.classList.remove('active');
     });
     
-  
+    // Toggle LLM mode
     llmToggle.addEventListener('change', (e) => {
         useLLM = e.target.checked;
         addMessage(`Switched to ${useLLM ? 'Smart Mode (AI-powered)' : 'Basic Mode (rule-based)'}`, 'bot');
@@ -99,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sendMessage() {
         const query = chatInput.value.trim();
         if (query) {
-           
+            // Add user message to UI and history
             addMessage(query, 'user');
             if(useLLM) {
                 conversationHistory.push({
@@ -109,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             chatInput.value = '';
             
-           
+            // Show typing indicator
             showTypingIndicator();
             
             try {
@@ -117,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (useLLM) {
                     response = await generateAIResponse(query);
                 } else {
-                   
+                    // Simulate delay for rule-based response
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     response = generateRuleBasedResponse(query);
                 }
@@ -137,9 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-   
+    // Generate AI response using OpenAI
     async function generateAIResponse(query) {
-       
+        // Replace with your actual OpenAI API key
         const API_KEY = "sk-your-openai-api-key-here"; 
         const API_URL = "https://api.openai.com/v1/chat/completions";
         
