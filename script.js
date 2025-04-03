@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Smooth Scrolling
+   
     document.querySelectorAll('.navbar a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Footer Year Update
+    
     document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil Kumar. All rights reserved.`;
 
-    // Chatbot Implementation
+
     const chatbotToggle = document.querySelector('.chatbot-toggle');
     const chatbotContainer = document.querySelector('.chatbot-container');
     const closeChatbot = document.querySelector('.close-chatbot');
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function generateAIResponse(query) {
-        const API_KEY = "sk-your-openai-api-key-here";
+        const API_KEY = "";
         const API_URL = "https://api.openai.com/v1/chat/completions";
         
         const response = await fetch(API_URL, {
