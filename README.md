@@ -12,7 +12,6 @@ Resume: A link to download my resume.
 Contact: Interactive buttons to connect via LinkedIn, GitHub, and email.
 
 
-The site is fully responsive, ensuring a seamless experience on both desktop and mobile devices. Additionally, it integrates an AI Chatbot, utilizing an open-source Large Language Model (LLM), fine-tuned to answer queries related to my resume, including work experience, skills, projects, and certifications.
 
 
 Live Demonstrations
