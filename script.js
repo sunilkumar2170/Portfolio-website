@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update copyright year
     document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil Kumar. All rights reserved.`;
 
+<<<<<<< HEAD
     // Chatbot functionality
     const chatbotToggle = document.querySelector('.chatbot-toggle');
     const chatbotContainer = document.querySelector('.chatbot-container');
@@ -227,3 +228,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize chatbot on page load
     initChatbot();
 });
+=======
+>>>>>>> f3172b2464d40d6e6dff578fc763573a38cdd019
