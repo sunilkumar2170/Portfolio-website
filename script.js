@@ -1,19 +1,56 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+    const successMessage = document.getElementById('formSuccess');
   
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+  
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        subject: form.subject.value,
+        message: form.message.value,
+      };
+  
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+  
+        const result = await res.json();
+  
+        if (res.ok && result.success) {
+          successMessage.style.display = 'block';
+          form.reset();
+        } else {
+          alert('Email failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error sending email:', error);
+        alert('Server error. Try again later.');
+      }
+    });
+  });
+
+    // Email validation helper function (if needed)
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Menu toggle functionality
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
-    const navbar = document.querySelector('.navbar');
 
     menuToggle.addEventListener('click', function() {
         this.classList.toggle('active');
         navLinks.classList.toggle('active');
         document.body.classList.toggle('menu-open');
-        
-        if (chatbotContainer.classList.contains('active')) {
-            chatbotContainer.classList.remove('active');
-        }
     });
 
+    // Close mobile menu when clicking a nav link
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
@@ -24,17 +61,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-   
+    // Smooth scrolling for anchor links
     document.querySelectorAll('.navbar a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
-            
+            const navbar = document.querySelector('.navbar');
             window.scrollTo({
                 top: targetElement.offsetTop - navbar.offsetHeight,
                 behavior: 'smooth'
@@ -42,10 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    
+    // Update copyright year
     document.querySelector('footer p').innerHTML = `&copy; ${new Date().getFullYear()} Sunil Kumar. All rights reserved.`;
 
-
+    // Chatbot functionality
     const chatbotToggle = document.querySelector('.chatbot-toggle');
     const chatbotContainer = document.querySelector('.chatbot-container');
     const closeChatbot = document.querySelector('.close-chatbot');
@@ -54,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.querySelector('.chatbot-messages');
     const llmToggle = document.querySelector('.llm-toggle');
 
+    // Resume data for chatbot responses
     const resumeData = {
         name: "Sunil Kumar",
         skills: [
@@ -88,28 +124,18 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     };
 
-    const SYSTEM_PROMPT = `You are Sunil Kumar, a Computer Science student at IIT Bhilai specializing in web and mobile development.
-    Strictly follow these rules:
-    1. For resume questions, answer ONLY using the provided data
-    2. For technical questions, provide clear explanations
-    3. Be professional but friendly
-    4. Format responses neatly with bullet points when helpful
-    5. If unsure, say "I don't have that information but I can tell you about [related topic]"
-
-    RESUME DATA:
-    ${JSON.stringify(resumeData, null, 2)}`;
-
     let useLLM = true;
     llmToggle.checked = useLLM;
     let conversationHistory = [
-        { role: "system", content: SYSTEM_PROMPT },
         { role: "assistant", content: "Hi! I'm Sunil's AI assistant. Ask me about my skills, projects, or experience!" }
     ];
 
+    // Initialize chatbot with welcome message
     function initChatbot() {
         addMessage("Hi! I'm Sunil's AI assistant. Ask me about my skills, projects, or experience!", 'bot');
     }
 
+    // Toggle chatbot visibility
     chatbotToggle.addEventListener('click', function() {
         chatbotContainer.classList.toggle('active');
         if (navLinks.classList.contains('active')) {
@@ -119,92 +145,55 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Close chatbot
     closeChatbot.addEventListener('click', function() {
         chatbotContainer.classList.remove('active');
     });
 
+    // Toggle between AI and basic mode
     llmToggle.addEventListener('change', function() {
         useLLM = this.checked;
-        addMessage(`Switched to ${useLLM ? 'AI Mode (powered by OpenAI)' : 'Basic Mode'}`, 'bot');
+        addMessage(`Switched to ${useLLM ? 'AI Mode' : 'Basic Mode'}`, 'bot');
     });
 
-    async function sendMessage() {
+    // Send message handler for chatbot
+    function sendMessage() {
         const query = chatInput.value.trim();
         if (!query) return;
 
         addMessage(query, 'user');
-        if (useLLM) {
-            conversationHistory.push({ role: "user", content: query });
-        }
         chatInput.value = '';
-        
         showTypingIndicator();
-        
-        try {
-            const response = useLLM 
-                ? await generateAIResponse(query) 
-                : generateRuleBasedResponse(query);
-            
+
+        setTimeout(() => {
+            const response = generateRuleBasedResponse(query);
             addMessage(response, 'bot');
-            if (useLLM) {
-                conversationHistory.push({ role: "assistant", content: response });
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            addMessage("Sorry, I'm having trouble responding. Please try again.", 'bot');
-        } finally {
             removeTypingIndicator();
-        }
+        }, 1000);
     }
 
-    async function generateAIResponse(query) {
-        const API_KEY = "";
-        const API_URL = "https://api.openai.com/v1/chat/completions";
-        
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: conversationHistory,
-                temperature: 0.7,
-                max_tokens: 300
-            })
-        });
-
-        const data = await response.json();
-        return data.choices?.[0]?.message?.content || generateRuleBasedResponse(query);
-    }
-
+    // Rule-based chatbot responses
     function generateRuleBasedResponse(query) {
         query = query.toLowerCase();
         
         if (query.includes('skill') || query.includes('technology')) {
             return "My technical skills include:\n" + resumeData.skills.map(s => `• ${s}`).join('\n');
-        } 
-        else if (query.includes('experience') || query.includes('work')) {
+        } else if (query.includes('experience') || query.includes('work')) {
             return "My experience:\n" + resumeData.experience.map(e => `• ${e}`).join('\n');
-        }
-        else if (query.includes('project')) {
+        } else if (query.includes('project')) {
             return "Projects I've worked on:\n" + resumeData.projects.map(p => `• ${p}`).join('\n');
-        }
-        else if (query.includes('education') || query.includes('study')) {
+        } else if (query.includes('education') || query.includes('study')) {
             return "Education:\n• " + resumeData.education.join('\n• ');
-        }
-        else if (query.includes('contact') || query.includes('email') || query.includes('reach')) {
+        } else if (query.includes('contact') || query.includes('email') || query.includes('reach')) {
             return "Contact me at:\n• " + resumeData.contact.join('\n• ');
-        }
-        else if (query.includes('hello') || query.includes('hi')) {
+        } else if (query.includes('hello') || query.includes('hi')) {
             return "Hello! Ask me about my skills, projects, or experience.";
-        }
-        else {
+        } else {
             return "I can discuss:\n• My skills\n• Projects\n• Experience\n• Education\nTry asking about these!";
         }
     }
 
+    // Add message to chat window
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
@@ -213,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    // Show typing indicator
     function showTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.id = 'typing-indicator';
@@ -222,15 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    // Remove typing indicator
     function removeTypingIndicator() {
         const indicator = document.getElementById('typing-indicator');
         if (indicator) indicator.remove();
     }
 
+    // Event listeners for chatbot send button and enter key
     sendButton.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
 
+    // Initialize chatbot on page load
     initChatbot();
 });
